@@ -17,7 +17,7 @@ client.on('ready', () => {
 const messagesRegexes = {
     "crash": /BetterDiscord seems to have crashed your Discord client/g,
     "assets": /Cannot read property (|.)assets(|.) of undefined/g,
-    "awkward": /well. this is awkward/g,
+    "awkward": /well. this is awkward/g,//|you died
     "PFL": /Try removing all your plugins then restarting Discord/g,
     "links": /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/g
 };
@@ -27,8 +27,9 @@ function getTextFromImage(url) {
         .then(({
             data: {
                 text
-            };
+            }
         }) => {
+            console.log(text)
             return text.toLowerCase();
         })
 }
@@ -49,9 +50,9 @@ async function getReply(message, regex) {
         PFL: `<@${message.author.id}> Windows: Press win + r and paste in %appdata%/betterdiscord/plugins\nMac: Go to finder, press cmd + shift + G and paste in ~/Library/Application Support/betterdiscord/plugins\nLinux: Go to your command line and type cd ~/.config/BetterDiscord/plugins`,
         awkward: `<@${message.author.id}> There are a number of plugins that are crashing Discord. Please :check_the_pins: READ THE PINS :check_the_pins: for more information.`
     };
-    if (messagesRegexes[regex].test(message.content)) {
-        return fixes[regex];
-    }
+    // if (messagesRegexes[regex].test(message.content)) {
+    //     return fixes[regex];
+    // }
     if (!message.attachments) return;
 
     if (message.attachments.first()) {
