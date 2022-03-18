@@ -10,7 +10,6 @@ client.on("ready", () => {
 
 function getTextFromImage(url) {
   return Tesseract.recognize(url).then(({ data: { text } }) => {
-    console.log(text);
     return text.toLowerCase();
   });
 }
@@ -44,6 +43,7 @@ async function getReply(message, regex) {
     const ImageText = await getTextFromImage(
       message.attachments.first().attachment
     );
+    
     for (let reg = 0; reg < Object.keys(messagesRegexes).length; reg++) {
       if (
         messagesRegexes[Object.keys(messagesRegexes)[reg]].test(
@@ -53,17 +53,22 @@ async function getReply(message, regex) {
         return fixes[Object.keys(messagesRegexes)[reg]];
       }
     }
-  } else {
+
+  }
+  else {
+
     const linkReg =
       /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/g;
     const isLinks = linkReg.test(message.content);
     if (!isLinks) return;
     const links = message.content.match(linkReg);
     let sent = false;
+
     for (let i = 0; i < links.length || !sent; i++) {
       if (checkUrl(message.content)) {
         sent = true;
         const ImageText = await getTextFromImage(links[i]);
+        
         for (let reg = 0; reg < Object.keys(messagesRegexes).length; reg++) {
           if (
             messagesRegexes[Object.keys(messagesRegexes)[reg]].test(
@@ -82,11 +87,13 @@ client.on("messageCreate", async (message) => {
   try {
     if (message.author.bot) return;
     if (message.channel.name != "bot-testing") return;
+    
     const msg = message;
     const reply = await getReply(msg);
-    console.log(reply);
+    
     if (reply) message.reply(reply);
-  } catch (err) {
+  } 
+  catch (err) {
     console.error(err);
   }
 });
